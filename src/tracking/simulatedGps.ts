@@ -69,7 +69,23 @@ export function startSimulatedWatch(
   return () => clearInterval(timer)
 }
 
+/**
+ * True when the simulator should be used. Checks the hash query too, because
+ * the standalone build routes on the hash and `?sim=1` then lands after it.
+ */
 export function simEnabled(): boolean {
   if (typeof window === 'undefined') return false
-  return new URLSearchParams(window.location.search).get('sim') === '1'
+  if (new URLSearchParams(window.location.search).get('sim') === '1') return true
+  const hash = window.location.hash
+  const queryStart = hash.indexOf('?')
+  if (queryStart === -1) return false
+  return new URLSearchParams(hash.slice(queryStart)).get('sim') === '1'
+}
+
+/**
+ * The simulator ships in dev, and in the standalone demo build where there is
+ * no GPS receiver to talk to. Never in the real production app.
+ */
+export function simAvailable(): boolean {
+  return import.meta.env.DEV || import.meta.env.VITE_STANDALONE === '1'
 }

@@ -7,7 +7,7 @@ import {
   getLiveSession,
   saveLiveSession,
 } from '../db/repo'
-import { simEnabled, startSimulatedWatch } from './simulatedGps'
+import { simAvailable, simEnabled, startSimulatedWatch } from './simulatedGps'
 import { useWakeLock } from './useWakeLock'
 
 export type TrackerStatus = 'idle' | 'running' | 'paused' | 'autopaused'
@@ -132,7 +132,7 @@ export function useGeoTracker(options: UseGeoTrackerOptions) {
   const startWatch = useCallback(() => {
     if (watchIdRef.current !== null || stopSimRef.current) return
 
-    if (import.meta.env.DEV && simEnabled()) {
+    if (simAvailable() && simEnabled()) {
       stopSimRef.current = startSimulatedWatch(handlePosition, {
         intervalMs: 1000,
         speedMps: 3,

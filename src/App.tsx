@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react'
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { AppProvider, useApp } from './state/AppContext'
 import { TabBar } from './components/TabBar'
 import { Home } from './screens/Home'
@@ -25,6 +25,13 @@ const SettingsScreen = lazy(() =>
 
 /** The tab bar would only get in the way on full-screen flows. */
 const CHROMELESS = ['/track', '/onboarding', '/intake']
+
+/**
+ * The standalone demo build is served as a single file with no server to
+ * rewrite paths, so it routes on the hash. The real app uses clean URLs.
+ */
+const IS_STANDALONE = import.meta.env.VITE_STANDALONE === '1'
+const Router = IS_STANDALONE ? HashRouter : BrowserRouter
 
 function Loading() {
   return (
@@ -73,9 +80,9 @@ function Shell() {
 export default function App() {
   return (
     <AppProvider>
-      <BrowserRouter>
+      <Router>
         <Shell />
-      </BrowserRouter>
+      </Router>
     </AppProvider>
   )
 }

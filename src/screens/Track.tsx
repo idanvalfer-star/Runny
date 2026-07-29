@@ -4,6 +4,7 @@ import type { ActivityType, LiveSession } from '../types'
 import { useApp } from '../state/AppContext'
 import { useGeoTracker } from '../tracking/useGeoTracker'
 import { useHeartRate } from '../tracking/useHeartRate'
+import { simAvailable, simEnabled } from '../tracking/simulatedGps'
 import { buildActivity } from '../lib/activity'
 import { saveActivity } from '../db/repo'
 import { Button, Card, Metric, Pill, cx } from '../components/ui'
@@ -18,6 +19,9 @@ export function Track() {
 
   const [type, setType] = useState<ActivityType>('run')
   const [confirmingStop, setConfirmingStop] = useState(false)
+  // No GPS receiver in a desktop browser, so the demo build can fake one.
+  const simOn = simAvailable() && simEnabled()
+  const canOfferSim = simAvailable() && !simEnabled()
 
   const tracker = useGeoTracker({
     weightKg: profile?.weightKg ?? 70,
@@ -99,6 +103,7 @@ export function Track() {
 
         <div className="mb-4 flex flex-wrap items-center gap-2">
           {active && <Pill tone="brand">{state.type}</Pill>}
+          {simOn && <Pill tone="warn">Simulated GPS</Pill>}
           {state.status === 'autopaused' && <Pill tone="warn">Auto-paused</Pill>}
           {state.status === 'paused' && <Pill>Paused</Pill>}
           {state.gpsAccuracyM !== undefined && (
@@ -161,9 +166,20 @@ export function Track() {
       {/* Controls sit at the bottom, in thumb reach. */}
       <div className="sticky bottom-0 border-t border-slate-200 bg-slate-50/95 px-4 py-4 backdrop-blur safe-bottom dark:border-slate-800 dark:bg-slate-950/95">
         {!active ? (
-          <Button size="lg" full onClick={() => tracker.start(type, planSessionId)}>
-            Start {type}
-          </Button>
+          <div className="flex flex-col gap-2">
+            <Button size="lg" full onClick={() => tracker.start(type, planSessionId)}>
+              Start {type}
+            </Button>
+            {canOfferSim && (
+              <Button
+                variant="ghost"
+                full
+                onClick={() => navigate(`/track?sim=1`, { replace: true })}
+              >
+                No GPS here? Run a simulated demo
+              </Button>
+            )}
+          </div>
         ) : confirmingStop ? (
           <div className="grid grid-cols-2 gap-3">
             <Button size="lg" variant="secondary" onClick={() => setConfirmingStop(false)}>

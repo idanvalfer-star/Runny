@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc -b",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "build:standalone": "vite build --config vite.standalone.config.ts"
   },
   "dependencies": {
     "dexie": "^4.4.4",
