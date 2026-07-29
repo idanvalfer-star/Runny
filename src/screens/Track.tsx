@@ -125,36 +125,38 @@ export function Track() {
 
         {/* Distance is the number you glance at mid-stride, so it gets the room. */}
         <div className="mb-8 text-center">
-          <div className="tnum text-8xl leading-none font-bold text-slate-900 dark:text-white">
-            {formatDistance(state.distanceKm, units)}
-          </div>
-          <div className="mt-2 text-sm font-medium tracking-wide text-slate-600 uppercase dark:text-slate-400">
-            {distanceLabel(units)}
+          <div className="inline-block rounded-3xl border-4 border-[#FF6B4A] px-8 py-6">
+            <div className="tnum text-8xl leading-none font-bold text-slate-900 dark:text-white">
+              {formatDistance(state.distanceKm, units)}
+            </div>
+            <div className="mt-2 text-sm font-medium tracking-wide text-slate-600 uppercase dark:text-slate-400">
+              {distanceLabel(units)}
+            </div>
           </div>
         </div>
 
         <div className="mb-6 grid grid-cols-2 gap-4">
-          <div className="rounded-xl bg-slate-100 dark:bg-[#1A1F2E] p-4">
-            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Time</div>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{formatDuration(state.elapsedSec)}</div>
+          <div className="rounded-2xl bg-slate-100 dark:bg-[#252B3A] p-5 shadow-sm">
+            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-2">Time</div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white tnum">{formatDuration(state.elapsedSec)}</div>
           </div>
-          <div className="rounded-xl bg-slate-100 dark:bg-[#1A1F2E] p-4">
-            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Avg pace</div>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">
+          <div className="rounded-2xl bg-slate-100 dark:bg-[#252B3A] p-5 shadow-sm">
+            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-2">Avg pace</div>
+            <div className="text-3xl font-bold text-[#FF6B4A] tnum">
               {formatPace(state.avgPaceSecPerKm ?? 0, units)}
             </div>
-            <div className="text-xs text-slate-600 dark:text-slate-400">{paceLabel(units)}</div>
+            <div className="text-xs text-slate-600 dark:text-slate-400 mt-1">{paceLabel(units)}</div>
           </div>
-          <div className="rounded-xl bg-slate-100 dark:bg-[#1A1F2E] p-4">
-            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Current pace</div>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">
+          <div className="rounded-2xl bg-slate-100 dark:bg-[#252B3A] p-5 shadow-sm">
+            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-2">Current pace</div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white tnum">
               {formatPace(state.currentPaceSecPerKm ?? 0, units)}
             </div>
-            <div className="text-xs text-slate-600 dark:text-slate-400">{paceLabel(units)}</div>
+            <div className="text-xs text-slate-600 dark:text-slate-400 mt-1">{paceLabel(units)}</div>
           </div>
-          <div className="rounded-xl bg-slate-100 dark:bg-[#1A1F2E] p-4">
-            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Calories</div>
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{Math.round(state.calories)}</div>
+          <div className="rounded-2xl bg-slate-100 dark:bg-[#252B3A] p-5 shadow-sm">
+            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-widest mb-2">Calories</div>
+            <div className="text-3xl font-bold text-slate-900 dark:text-white tnum">{Math.round(state.calories)}</div>
           </div>
         </div>
 

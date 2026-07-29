@@ -39,6 +39,14 @@
     overscroll-behavior-y: contain;
   }
 
+  h1 {
+    @apply font-bold tracking-tight;
+  }
+
+  h2 {
+    @apply font-semibold;
+  }
+
   /* Tabular numerals stop the timer from jittering as digits change. */
   .tnum {
     font-variant-numeric: tabular-nums;

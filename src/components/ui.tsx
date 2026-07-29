@@ -14,8 +14,8 @@ export function Card({
   return (
     <div
       className={cx(
-        'rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200/70',
-        'dark:bg-[#1A1F2E] dark:ring-slate-700',
+        'rounded-2xl bg-white p-4 shadow-md ring-1 ring-slate-200/50',
+        'dark:bg-[#1A1F2E] dark:ring-slate-700/50 dark:shadow-lg',
         className,
       )}
     >

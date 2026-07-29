@@ -49,7 +49,7 @@ export function RouteMap({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Polyline positions={positions} pathOptions={{ color: '#059669', weight: 4 }} />
+        <Polyline positions={positions} pathOptions={{ color: '#FF6B4A', weight: 5, opacity: 0.9 }} />
         <CircleMarker
           center={start}
           radius={6}
