@@ -45,7 +45,7 @@ export function buildActivity(input: BuildActivityInput): Activity {
     route: input.route,
     hrSamples: input.hrSamples,
     avgPaceSecPerKm,
-    bestPaceSecPerKm: bestFullSplitPace(splits),
+    bestPaceSecPerKm: bestFullSplitPace(splits, 1),
     avgHr: averageHr(input.hrSamples),
     maxHr: maxHrOf(input.hrSamples),
     caloriesBurned: caloriesForRoute(input.route, input.type, input.weightKg),

@@ -12,6 +12,8 @@ interface NoteContext {
   beginner: boolean
   weekNumber: number
   runWalkRatio?: string
+  /** Distinguishes repeats of the same session type inside one week. */
+  variant?: number
 }
 
 const NOTES: Record<SessionType, (ctx: NoteContext) => string[]> = {
@@ -83,8 +85,12 @@ const NOTES: Record<SessionType, (ctx: NoteContext) => string[]> = {
   ],
 }
 
-/** Deterministic variety: same session always gets the same note. */
+/**
+ * Deterministic variety: a given session always gets the same note, but four
+ * easy runs in one week do not all read identically.
+ */
 export function coachNoteFor(type: SessionType, ctx: NoteContext): string {
   const options = NOTES[type](ctx)
-  return options[ctx.weekNumber % options.length]
+  const seed = ctx.weekNumber + (ctx.variant ?? 0)
+  return options[Math.abs(seed) % options.length]
 }

@@ -115,9 +115,23 @@ export function computeSplits(
   return splits
 }
 
-/** Fastest full split, ignoring any partial tail (which is always "fastest"). */
-export function bestFullSplitPace(splits: Split[]): number | undefined {
-  const full = splits.filter((s) => s.distanceKm > 0.9 * splits[0]?.distanceKm)
+/** True when a split is a leftover tail rather than a complete unit. */
+export function isPartialSplit(split: Split, unitKm = 1): boolean {
+  return split.distanceKm < unitKm * 0.95
+}
+
+/**
+ * Fastest complete split.
+ *
+ * Partial tails are excluded: a 70 m sprint to the front door would otherwise
+ * always win, and reporting that as a "best pace" is meaningless. A run that
+ * never completed a full unit has no best split pace at all.
+ */
+export function bestFullSplitPace(
+  splits: Split[],
+  unitKm = 1,
+): number | undefined {
+  const full = splits.filter((s) => !isPartialSplit(s, unitKm))
   if (full.length === 0) return undefined
   return full.reduce(
     (best, s) => Math.min(best, s.paceSecPerKm),

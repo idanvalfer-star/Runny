@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { fastestWindowSec, newBestsFor, personalBests } from './personalBests'
-import { computeSplits, timeAtDistance } from './splits'
+import {
+  bestFullSplitPace,
+  computeSplits,
+  isPartialSplit,
+  timeAtDistance,
+} from './splits'
 import { cumulativeDistanceKm } from './geo'
 import type { Activity, RoutePoint } from '../types'
 
@@ -170,6 +175,34 @@ describe('computeSplits', () => {
   it('drops a negligible tail rather than showing a 5 m split', () => {
     const route = routeFromSegments([{ metres: 1010, speedMps: 3 }])
     expect(computeSplits(route, [])).toHaveLength(1)
+  })
+
+  it('marks a lone sub-kilometre split as partial rather than "km 1"', () => {
+    // A 70 m jog produces one split that is not a kilometre.
+    const route = routeFromSegments([{ metres: 70, speedMps: 3 }])
+    const splits = computeSplits(route, [])
+    expect(splits).toHaveLength(1)
+    expect(isPartialSplit(splits[0])).toBe(true)
+  })
+
+  it('has no best split pace until a full unit is completed', () => {
+    const route = routeFromSegments([{ metres: 70, speedMps: 3 }])
+    // A 70 m dash is not a "best pace" — it would beat every real kilometre.
+    expect(bestFullSplitPace(computeSplits(route, []))).toBeUndefined()
+  })
+
+  it('takes best pace from the fastest complete split, ignoring the tail', () => {
+    const route = routeFromSegments([
+      { metres: 1000, speedMps: 2.5 },
+      { metres: 1000, speedMps: 3.5 },
+      // A short, very fast tail that must not become the reported best.
+      { metres: 100, speedMps: 8 },
+    ])
+    const splits = computeSplits(route, [])
+    const best = bestFullSplitPace(splits)!
+    // The 3.5 m/s kilometre is about 286 s/km; the tail would be about 125.
+    expect(best).toBeGreaterThan(270)
+    expect(best).toBeLessThan(300)
   })
 
   it('averages heart rate within each split window', () => {

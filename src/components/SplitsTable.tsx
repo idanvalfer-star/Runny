@@ -1,11 +1,15 @@
 import type { Split } from '../types'
 import type { Units } from '../lib/units'
-import { formatPace, paceLabel } from '../lib/units'
+import { KM_PER_MILE, formatPace, paceLabel } from '../lib/units'
+import { isPartialSplit } from '../lib/splits'
 
 export function SplitsTable({ splits, units }: { splits: Split[]; units: Units }) {
   if (splits.length === 0) return null
 
-  const fullSplits = splits.filter((s) => s.distanceKm >= splits[0].distanceKm * 0.95)
+  // Compare against the nominal unit, not the first split — a run that never
+  // completed a full kilometre has only a partial, and it should say so.
+  const unitKm = units === 'mi' ? KM_PER_MILE : 1
+  const fullSplits = splits.filter((s) => !isPartialSplit(s, unitKm))
   const fastest = fullSplits.reduce(
     (best, s) => Math.min(best, s.paceSecPerKm),
     Number.POSITIVE_INFINITY,
@@ -27,7 +31,7 @@ export function SplitsTable({ splits, units }: { splits: Split[]; units: Units }
         </thead>
         <tbody>
           {splits.map((split) => {
-            const partial = split.distanceKm < splits[0].distanceKm * 0.95
+            const partial = isPartialSplit(split, unitKm)
             // Bar length shows relative effort at a glance without a chart.
             const fill = partial
               ? 0

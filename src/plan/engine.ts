@@ -479,6 +479,8 @@ function makeSession(input: MakeSessionInput): PlannedSession {
       beginner: input.beginner,
       weekNumber: input.weekNumber,
       runWalkRatio: input.runWalkRatio,
+      // Keeps repeats of one session type inside a week from reading identically.
+      variant: input.dayOfWeek,
     }),
     whyRuleIds: dedupe(input.rules),
   }
