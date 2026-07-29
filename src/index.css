@@ -1,0 +1,60 @@
+@import 'tailwindcss';
+
+/* Dark mode is driven by a class on <html> so the user can override the system
+   preference in Settings — early-morning runs are the main use case. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-brand-50: oklch(0.97 0.02 155);
+  --color-brand-100: oklch(0.94 0.05 155);
+  --color-brand-200: oklch(0.89 0.09 155);
+  --color-brand-300: oklch(0.82 0.13 155);
+  --color-brand-400: oklch(0.75 0.16 155);
+  --color-brand-500: oklch(0.68 0.17 155);
+  --color-brand-600: oklch(0.58 0.15 155);
+  --color-brand-700: oklch(0.48 0.12 155);
+  --color-brand-800: oklch(0.38 0.09 155);
+  --color-brand-900: oklch(0.28 0.06 155);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* Stops a double-tap on a big mid-run button from zooming the page. */
+    touch-action: manipulation;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply dark:bg-slate-950 dark:text-slate-100;
+    overscroll-behavior-y: contain;
+  }
+
+  /* Tabular numerals stop the timer from jittering as digits change. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+}
+
+@utility safe-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+}
+
+@utility safe-top {
+  padding-top: max(env(safe-area-inset-top), 0rem);
+}
+
+/* Leaflet ships its own CSS expecting a light canvas; tone the tiles down in
+   dark mode so a route map at 6am is not a flashlight. */
+.dark .leaflet-tile-pane {
+  filter: brightness(0.65) contrast(1.05) saturate(0.7);
+}
+
+.leaflet-container {
+  background: var(--color-slate-200);
+  font: inherit;
+}
+.dark .leaflet-container {
+  background: var(--color-slate-800);
+}
