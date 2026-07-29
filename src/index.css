@@ -5,16 +5,25 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-brand-50: oklch(0.97 0.02 155);
-  --color-brand-100: oklch(0.94 0.05 155);
-  --color-brand-200: oklch(0.89 0.09 155);
-  --color-brand-300: oklch(0.82 0.13 155);
-  --color-brand-400: oklch(0.75 0.16 155);
-  --color-brand-500: oklch(0.68 0.17 155);
-  --color-brand-600: oklch(0.58 0.15 155);
-  --color-brand-700: oklch(0.48 0.12 155);
-  --color-brand-800: oklch(0.38 0.09 155);
-  --color-brand-900: oklch(0.28 0.06 155);
+  /* Teal accent (primary) */
+  --color-brand-50: oklch(0.97 0.02 200);
+  --color-brand-100: oklch(0.94 0.05 200);
+  --color-brand-200: oklch(0.88 0.08 200);
+  --color-brand-300: oklch(0.80 0.12 200);
+  --color-brand-400: oklch(0.70 0.16 200);
+  --color-brand-500: oklch(0.60 0.18 200);
+  --color-brand-600: oklch(0.50 0.17 200);
+  --color-brand-700: oklch(0.42 0.15 200);
+  --color-brand-800: oklch(0.32 0.12 200);
+  --color-brand-900: oklch(0.20 0.08 200);
+
+  /* Orange accent (secondary) */
+  --color-accent-500: #FF6B4A;
+  --color-accent-400: #FF8366;
+
+  /* Dark backgrounds */
+  --color-surface-bg: #0F1419;
+  --color-surface-card: #1A1F2E;
 }
 
 @layer base {
@@ -26,7 +35,7 @@
 
   body {
     @apply bg-slate-50 text-slate-900 antialiased;
-    @apply dark:bg-slate-950 dark:text-slate-100;
+    @apply dark:bg-[#0F1419] dark:text-slate-100;
     overscroll-behavior-y: contain;
   }
 

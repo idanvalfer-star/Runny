@@ -15,7 +15,7 @@ export function Card({
     <div
       className={cx(
         'rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200/70',
-        'dark:bg-slate-900 dark:ring-slate-800',
+        'dark:bg-[#1A1F2E] dark:ring-slate-700',
         className,
       )}
     >
@@ -57,12 +57,12 @@ export function Button({
   const base =
     'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500'
   const variants = {
-    primary: 'bg-brand-600 text-white hover:bg-brand-700',
+    primary: 'bg-brand-600 text-white hover:bg-brand-700 dark:bg-brand-500 dark:hover:bg-brand-600',
     secondary:
-      'bg-slate-200 text-slate-900 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700',
+      'bg-slate-200 text-slate-900 hover:bg-slate-300 dark:bg-[#252B3A] dark:text-slate-100 dark:hover:bg-[#2F3649]',
     danger: 'bg-red-600 text-white hover:bg-red-700',
     ghost:
-      'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800',
+      'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-[#252B3A]',
   }
   // 44px minimum height: these get tapped mid-stride, one-handed.
   const sizes = { md: 'min-h-11 px-4 text-base', lg: 'min-h-14 px-6 text-lg' }

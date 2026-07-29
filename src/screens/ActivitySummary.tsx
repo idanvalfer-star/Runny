@@ -71,52 +71,61 @@ export function ActivitySummary() {
   }
 
   return (
-    <div className="px-4 pt-6 safe-top">
-      <header className="mb-4">
-        <div className="mb-1 flex items-center gap-2">
+    <div className="px-4 pt-6 pb-24 safe-top dark:bg-[#0F1419] min-h-dvh">
+      <header className="mb-6">
+        <div className="mb-3 flex items-center gap-2">
           <Pill tone="brand">{activity.type}</Pill>
           {activity.source === 'import' && <Pill>Imported</Pill>}
           {activity.painReported && <Pill tone="danger">Pain reported</Pill>}
           {activity.rpe !== undefined && <Pill>RPE {activity.rpe}</Pill>}
         </div>
-        <h1 className="text-2xl font-bold">
+        <h1 className="text-4xl font-bold text-slate-900 dark:text-white">
           {formatDistance(activity.distanceKm, units)} {distanceLabel(units)}
         </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
           {formatDateTime(activity.startTime)}
         </p>
       </header>
 
-      <Card className="mb-4 border-l-4 border-brand-500">
-        <p className="text-sm leading-relaxed">{takeaway}</p>
+      <Card className="mb-6 border-l-4 border-brand-500 dark:bg-[#1A1F2E]">
+        <p className="text-base leading-relaxed text-slate-900 dark:text-slate-100 font-medium">{takeaway}</p>
       </Card>
 
-      <RouteMap route={activity.route} className="mb-4 h-56 overflow-hidden rounded-2xl" />
+      <RouteMap route={activity.route} className="mb-6 h-64 overflow-hidden rounded-2xl shadow-sm" />
 
-      <Card className="mb-4">
+      <Card className="mb-6 dark:bg-[#1A1F2E]">
         <div className="grid grid-cols-2 gap-4">
-          <Metric label="Moving time" value={formatDuration(activity.movingTimeSec)} />
-          <Metric label="Elapsed" value={formatDuration(activity.elapsedTimeSec)} />
-          <Metric
-            label="Avg pace"
-            value={formatPace(activity.avgPaceSecPerKm, units)}
-            unit={paceLabel(units)}
-          />
-          <Metric
-            label="Best pace"
-            value={
-              activity.bestPaceSecPerKm
-                ? formatPace(activity.bestPaceSecPerKm, units)
-                : '--:--'
-            }
-            unit={paceLabel(units)}
-          />
-          <Metric label="Calories" value={Math.round(activity.caloriesBurned).toString()} />
-          <Metric
-            label="Elevation"
-            value={`+${Math.round(activity.elevationGainM)} / -${Math.round(activity.elevationLossM)}`}
-            unit="m"
-          />
+          <div>
+            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Moving time</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">{formatDuration(activity.movingTimeSec)}</div>
+          </div>
+          <div>
+            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Elapsed</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">{formatDuration(activity.elapsedTimeSec)}</div>
+          </div>
+          <div>
+            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Avg pace</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">{formatPace(activity.avgPaceSecPerKm, units)}</div>
+            <div className="text-xs text-slate-600 dark:text-slate-400">{paceLabel(units)}</div>
+          </div>
+          <div>
+            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Best pace</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">
+              {activity.bestPaceSecPerKm ? formatPace(activity.bestPaceSecPerKm, units) : '--:--'}
+            </div>
+            <div className="text-xs text-slate-600 dark:text-slate-400">{paceLabel(units)}</div>
+          </div>
+          <div>
+            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Calories</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">{Math.round(activity.caloriesBurned)}</div>
+          </div>
+          <div>
+            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Elevation</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">
+              +{Math.round(activity.elevationGainM)}m
+            </div>
+            <div className="text-xs text-slate-600 dark:text-slate-400">−{Math.round(activity.elevationLossM)}m</div>
+          </div>
         </div>
         {activity.discardedPoints ? (
           <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
@@ -127,19 +136,27 @@ export function ActivitySummary() {
       </Card>
 
       {activity.hrSamples.length > 0 ? (
-        <section className="mb-4">
-          <SectionTitle>Heart rate</SectionTitle>
-          <Card>
-            <div className="mb-4 grid grid-cols-2 gap-4">
-              <Metric label="Average" value={`${activity.avgHr ?? '--'}`} unit="bpm" />
-              <Metric label="Max" value={`${activity.maxHr ?? '--'}`} unit="bpm" />
+        <section className="mb-6">
+          <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">Heart rate</h2>
+          <Card className="dark:bg-[#1A1F2E]">
+            <div className="mb-6 grid grid-cols-2 gap-4">
+              <div>
+                <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Average</div>
+                <div className="text-2xl font-bold text-slate-900 dark:text-white">{activity.avgHr ?? '--'}</div>
+                <div className="text-xs text-slate-600 dark:text-slate-400">bpm</div>
+              </div>
+              <div>
+                <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Max</div>
+                <div className="text-2xl font-bold text-slate-900 dark:text-white">{activity.maxHr ?? '--'}</div>
+                <div className="text-xs text-slate-600 dark:text-slate-400">bpm</div>
+              </div>
             </div>
             <HrZoneBars samples={activity.hrSamples} maxHr={maxHr} />
           </Card>
         </section>
       ) : (
-        <Card className="mb-4">
-          <p className="mb-2 text-sm text-slate-500 dark:text-slate-400">
+        <Card className="mb-6 dark:bg-[#1A1F2E]">
+          <p className="mb-3 text-sm text-slate-600 dark:text-slate-400">
             No heart rate recorded for this session.
           </p>
           {manualHrOpen ? (
@@ -160,17 +177,17 @@ export function ActivitySummary() {
       )}
 
       {activity.route.length > 2 && (
-        <section className="mb-4">
-          <SectionTitle>Pace over distance</SectionTitle>
-          <Card>
+        <section className="mb-6">
+          <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">Pace over distance</h2>
+          <Card className="dark:bg-[#1A1F2E]">
             <PaceChart activity={activity} units={units} />
           </Card>
         </section>
       )}
 
       {activity.splits.length > 0 && (
-        <section className="mb-4">
-          <SectionTitle>Splits</SectionTitle>
+        <section className="mb-6">
+          <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">Splits</h2>
           <SplitsTable splits={activity.splits} units={units} />
         </section>
       )}

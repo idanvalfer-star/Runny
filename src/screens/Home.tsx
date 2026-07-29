@@ -37,63 +37,93 @@ export function Home() {
   const greeting = greetingFor(new Date())
 
   return (
-    <div className="px-4 pt-6 safe-top">
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold">
+    <div className="min-h-dvh flex flex-col px-4 pt-6 pb-24 safe-top dark:bg-[#0F1419]">
+      <header className="mb-8">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
           {greeting}
           {profile?.name ? `, ${profile.name}` : ''}
         </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
           {thisWeek.length === 0
             ? "Nothing logged this week yet — a short one still counts."
             : `${thisWeek.length} session${thisWeek.length === 1 ? '' : 's'} this week.`}
         </p>
       </header>
 
-      <Card className="mb-6">
-        <div className="grid grid-cols-2 gap-4">
-          <Metric
-            label="This week"
-            value={formatDistance(weekKm, settings.units, 1)}
-            unit={distanceLabel(settings.units)}
-            size="lg"
-            accent
-          />
-          <Metric
-            label="Time"
-            value={Math.round(weekMinutes).toString()}
-            unit="min"
-            size="lg"
-          />
+      <div className="mb-8 flex items-center gap-8">
+        <div className="flex-1">
+          <div className="relative w-24 h-24">
+            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="8"
+                className="text-slate-200 dark:text-slate-700"
+              />
+              <circle
+                cx="50"
+                cy="50"
+                r="45"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="8"
+                strokeDasharray={`${Math.min(thisWeek.length, 5) * (2 * Math.PI * 45) / 5} ${2 * Math.PI * 45}`}
+                className="text-brand-500 dark:text-brand-400 transition-all"
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-slate-900 dark:text-white">
+                  {thisWeek.length}
+                </div>
+                <div className="text-xs text-slate-600 dark:text-slate-400">/5</div>
+              </div>
+            </div>
+          </div>
         </div>
-      </Card>
 
-      <Button size="lg" full className="mb-6" onClick={() => navigate('/track')}>
+        <div className="flex-1 space-y-3">
+          <div>
+            <div className="text-sm text-slate-600 dark:text-slate-400">This week</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">
+              {formatDistance(weekKm, settings.units, 1)} {distanceLabel(settings.units).toLowerCase()}
+            </div>
+          </div>
+          <div>
+            <div className="text-sm text-slate-600 dark:text-slate-400">Time</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">
+              {Math.round(weekMinutes)} min
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {todaySession && plan && (
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Today</h2>
+            <Link
+              to="/plan"
+              className="text-sm font-medium text-brand-600 dark:text-brand-400 hover:opacity-80"
+            >
+              Full plan
+            </Link>
+          </div>
+          <SessionCard session={todaySession} units={settings.units} />
+        </div>
+      )}
+
+      <Button size="lg" full className="mb-8" onClick={() => navigate('/track')}>
         Start a session
       </Button>
 
-      {todaySession && plan && (
-        <section className="mb-6">
-          <SectionTitle
-            action={
-              <Link
-                to="/plan"
-                className="text-sm font-medium text-brand-600 dark:text-brand-400"
-              >
-                Full plan
-              </Link>
-            }
-          >
-            Today
-          </SectionTitle>
-          <SessionCard session={todaySession} units={settings.units} />
-        </section>
-      )}
-
       {!plan && !loading && (
-        <Card className="mb-6">
-          <h3 className="mb-1 font-semibold">No training plan yet</h3>
-          <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">
+        <Card className="mb-8 border-l-4 border-brand-500 dark:bg-[#1A1F2E]">
+          <h3 className="mb-2 font-semibold text-slate-900 dark:text-white">No training plan yet</h3>
+          <p className="mb-4 text-sm text-slate-600 dark:text-slate-400">
             Answer a few questions and Runny will build a plan around your goal,
             your schedule and where your fitness actually is right now.
           </p>
@@ -101,32 +131,21 @@ export function Home() {
         </Card>
       )}
 
-      <section>
-        <SectionTitle
-          action={
-            <Link
-              to="/history"
-              className="text-sm font-medium text-brand-600 dark:text-brand-400"
-            >
-              See all
-            </Link>
-          }
-        >
-          Recent
-        </SectionTitle>
+      <div className="flex-1">
+        <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">Recent</h2>
         {activities.length === 0 ? (
           <EmptyState
             title="No activities yet"
             body="Your first tracked run or walk will show up here with a full breakdown."
           />
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             {activities.slice(0, 5).map((a) => (
               <ActivityRow key={a.id} activity={a} units={settings.units} />
             ))}
           </div>
         )}
-      </section>
+      </div>
     </div>
   )
 }

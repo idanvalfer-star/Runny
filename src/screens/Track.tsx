@@ -65,7 +65,7 @@ export function Track() {
   const units = settings.units
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="flex min-h-dvh flex-col dark:bg-[#0F1419]">
       {tracker.recoverable && !active && (
         <RecoveryBanner
           session={tracker.recoverable}
@@ -76,9 +76,9 @@ export function Track() {
 
       <div className="flex-1 px-4 pt-4 safe-top">
         {!active && (
-          <div className="mb-6">
-            <h1 className="mb-1 text-2xl font-bold">Ready when you are</h1>
-            <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">
+          <div className="mb-8">
+            <h1 className="mb-1 text-3xl font-bold text-slate-900 dark:text-white">Ready when you are</h1>
+            <p className="mb-6 text-sm text-slate-600 dark:text-slate-400">
               Pick what you're doing — it changes how calories are estimated.
             </p>
             <div className="grid grid-cols-2 gap-3">
@@ -87,10 +87,10 @@ export function Track() {
                   key={t}
                   onClick={() => setType(t)}
                   className={cx(
-                    'min-h-16 rounded-2xl text-lg font-semibold capitalize transition ring-1',
+                    'min-h-16 rounded-2xl text-lg font-semibold capitalize transition ring-1 shadow-sm',
                     type === t
-                      ? 'bg-brand-600 text-white ring-brand-600'
-                      : 'bg-white text-slate-700 ring-slate-200 dark:bg-slate-900 dark:text-slate-200 dark:ring-slate-800',
+                      ? 'bg-brand-600 text-white ring-brand-600 dark:bg-brand-500 dark:ring-brand-500'
+                      : 'bg-white text-slate-700 ring-slate-200 dark:bg-[#1A1F2E] dark:text-slate-200 dark:ring-slate-700',
                   )}
                   aria-pressed={type === t}
                 >
@@ -118,40 +118,48 @@ export function Track() {
         </div>
 
         {state.error && (
-          <Card className="mb-4 border-l-4 border-amber-500">
-            <p className="text-sm">{state.error}</p>
+          <Card className="mb-4 border-l-4 border-amber-500 dark:bg-[#1A1F2E]">
+            <p className="text-sm text-slate-900 dark:text-slate-200">{state.error}</p>
           </Card>
         )}
 
         {/* Distance is the number you glance at mid-stride, so it gets the room. */}
-        <div className="mb-6 text-center">
-          <div className="tnum text-7xl leading-none font-bold">
+        <div className="mb-8 text-center">
+          <div className="tnum text-8xl leading-none font-bold text-slate-900 dark:text-white">
             {formatDistance(state.distanceKm, units)}
           </div>
-          <div className="mt-1 text-sm font-medium tracking-wide text-slate-500 uppercase dark:text-slate-400">
+          <div className="mt-2 text-sm font-medium tracking-wide text-slate-600 uppercase dark:text-slate-400">
             {distanceLabel(units)}
           </div>
         </div>
 
         <div className="mb-6 grid grid-cols-2 gap-4">
-          <Metric label="Time" value={formatDuration(state.elapsedSec)} size="lg" />
-          <Metric
-            label="Avg pace"
-            value={formatPace(state.avgPaceSecPerKm ?? 0, units)}
-            unit={paceLabel(units)}
-            size="lg"
-          />
-          <Metric
-            label="Current pace"
-            value={formatPace(state.currentPaceSecPerKm ?? 0, units)}
-            unit={paceLabel(units)}
-            size="lg"
-          />
-          <Metric label="Calories" value={Math.round(state.calories).toString()} size="lg" />
+          <div className="rounded-xl bg-slate-100 dark:bg-[#1A1F2E] p-4">
+            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Time</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">{formatDuration(state.elapsedSec)}</div>
+          </div>
+          <div className="rounded-xl bg-slate-100 dark:bg-[#1A1F2E] p-4">
+            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Avg pace</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">
+              {formatPace(state.avgPaceSecPerKm ?? 0, units)}
+            </div>
+            <div className="text-xs text-slate-600 dark:text-slate-400">{paceLabel(units)}</div>
+          </div>
+          <div className="rounded-xl bg-slate-100 dark:bg-[#1A1F2E] p-4">
+            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Current pace</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">
+              {formatPace(state.currentPaceSecPerKm ?? 0, units)}
+            </div>
+            <div className="text-xs text-slate-600 dark:text-slate-400">{paceLabel(units)}</div>
+          </div>
+          <div className="rounded-xl bg-slate-100 dark:bg-[#1A1F2E] p-4">
+            <div className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Calories</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">{Math.round(state.calories)}</div>
+          </div>
         </div>
 
         {hr.status === 'connected' ? (
-          <Card className="mb-4">
+          <Card className="mb-4 dark:bg-[#1A1F2E] border-l-4 border-brand-500">
             <Metric label="Heart rate" value={`${hr.bpm ?? '--'}`} unit="bpm" size="lg" accent />
           </Card>
         ) : (
@@ -164,7 +172,7 @@ export function Track() {
       </div>
 
       {/* Controls sit at the bottom, in thumb reach. */}
-      <div className="sticky bottom-0 border-t border-slate-200 bg-slate-50/95 px-4 py-4 backdrop-blur safe-bottom dark:border-slate-800 dark:bg-slate-950/95">
+      <div className="sticky bottom-0 border-t border-slate-200 bg-slate-50/95 px-4 py-4 backdrop-blur safe-bottom dark:border-slate-700 dark:bg-[#1A1F2E]/95">
         {!active ? (
           <div className="flex flex-col gap-2">
             <Button size="lg" full onClick={() => tracker.start(type, planSessionId)}>
