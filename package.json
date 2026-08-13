@@ -16,6 +16,7 @@
     "build:standalone": "vite build --config vite.standalone.config.ts"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.112.3",
     "dexie": "^4.4.4",
     "express": "^4.18.2",
     "leaflet": "^1.9.4",

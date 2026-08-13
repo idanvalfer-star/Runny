@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import type { ActivityType, LiveSession } from '../types'
 import { useApp } from '../state/AppContext'
+import { useAuth } from '../state/AuthContext'
 import { useGeoTracker } from '../tracking/useGeoTracker'
 import { useHeartRate } from '../tracking/useHeartRate'
 import { simAvailable, simEnabled } from '../tracking/simulatedGps'
 import { buildActivity } from '../lib/activity'
 import { saveActivity } from '../db/repo'
+import { syncActivityOnSave } from '../lib/syncService'
 import { Button, Card, Metric, Pill, cx } from '../components/ui'
 import { formatDistance, formatDuration, formatPace, paceLabel, distanceLabel } from '../lib/units'
 
@@ -15,6 +17,7 @@ export function Track() {
   const [params] = useSearchParams()
   const planSessionId = params.get('session') ?? undefined
   const { settings, profile } = useApp()
+  const { user } = useAuth()
   const hr = useHeartRate()
 
   const [type, setType] = useState<ActivityType>('run')
@@ -59,6 +62,9 @@ export function Track() {
       planSessionId: finished.planSessionId ?? planSessionId,
     })
     await saveActivity(activity)
+    if (user) {
+      await syncActivityOnSave(activity, user.id)
+    }
     navigate(`/activity/${activity.id}?new=1`)
   }
 

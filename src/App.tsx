@@ -1,10 +1,13 @@
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import { BrowserRouter, HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { AppProvider, useApp } from './state/AppContext'
+import { AuthProvider, useAuth } from './state/AuthContext'
 import { TabBar } from './components/TabBar'
 import { Home } from './screens/Home'
 import { Track } from './screens/Track'
 import { Onboarding } from './screens/Onboarding'
+import { Auth } from './screens/Auth'
+import { migrateLocalDataToCloud } from './lib/syncService'
 
 /**
  * Home and Track load eagerly — starting a run is the one thing that has to be
@@ -43,9 +46,23 @@ function Loading() {
 
 function Shell() {
   const { loading, settings } = useApp()
+  const { user, loading: authLoading } = useAuth()
   const location = useLocation()
+  const [migrated, setMigrated] = useState(false)
 
-  if (loading) return <Loading />
+  // On first login, migrate local data to cloud
+  useEffect(() => {
+    if (user && !migrated) {
+      migrateLocalDataToCloud(user.id).catch(console.error)
+      setMigrated(true)
+    }
+  }, [user, migrated])
+
+  if (loading || authLoading) return <Loading />
+
+  if (!user) {
+    return <Auth />
+  }
 
   if (!settings.onboardingComplete && location.pathname !== '/onboarding') {
     return <Navigate to="/onboarding" replace />
@@ -79,10 +96,12 @@ function Shell() {
 
 export default function App() {
   return (
-    <AppProvider>
-      <Router>
-        <Shell />
-      </Router>
-    </AppProvider>
+    <AuthProvider>
+      <AppProvider>
+        <Router>
+          <Shell />
+        </Router>
+      </AppProvider>
+    </AuthProvider>
   )
 }
